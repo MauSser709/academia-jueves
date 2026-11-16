@@ -168,6 +168,7 @@ nav button.on i{transform:translateY(-2px) scale(1.12)}
       <p>Ajedrez en Minutos · MF Rafael Miranda</p>
     </div>
   </header>
+  <a id="fullapp" href="https://mausser709.github.io/academia-jueves/" target="_blank" rel="noopener" style="display:none;background:var(--gold);color:#1b1408;border-radius:14px;padding:12px 14px;margin-bottom:14px;font-weight:600;font-size:14px">⚠ Estás en una vista previa: acá no se ven los videos ni los tableros. Tocá para abrir la app completa ↗</a>
   <div class="acct" id="acct">👤 <span>Viendo como <b id="acct-mail">—</b> · cambiar</span></div>
 
   <!-- INICIO -->
@@ -609,6 +610,11 @@ $("#f-ok").onclick=()=>{
   $("#setup").classList.remove("on");applyAccount();loadLichess();toast("Listo, quedó guardado");
 };
 
+/* ===== vista incrustada (p. ej. vista previa de Claude): sin iframes externos ===== */
+let FRAMED=false;try{FRAMED=window.self!==window.top}catch(e){FRAMED=true}
+if(FRAMED){$("#fullapp").style.display="block";
+  document.querySelectorAll(".frame").forEach(f=>{f.style.display="none"});}
+
 /* ===== estudios de Lichess ===== */
 const STUDIES=[
  ["cOo8YfpH","Academia Jueves","De la clase","♞"],
@@ -633,7 +639,7 @@ $("#studies").onclick=e=>{const c=e.target.closest(".st");if(c)openStudy(c.datas
 function showChapter(i){
   ci=Math.max(0,Math.min(chapters.length-1,i));
   const ch=chapters[ci];
-  $("#board").src=`https://lichess.org/study/embed/${curStudy}/${ch.id}?theme=brown&bg=dark`;
+  if(!FRAMED)$("#board").src=`https://lichess.org/study/embed/${curStudy}/${ch.id}?theme=brown&bg=dark`;
   $("#chsel").value=ci;
   $("#solve").href=`https://lichess.org/study/${curStudy}/${ch.id}`;
   $("#analyze").href=`https://lichess.org/study/${curStudy}/${ch.id}#analysis`;
@@ -657,7 +663,7 @@ $("#next").onclick=()=>showChapter(ci+1);
 
 /* ===== YouTube: último video del canal ===== */
 let ytLoaded=false;
-function loadYT(){if(ytLoaded)return;ytLoaded=true;$("#yt").src="https://www.youtube.com/embed/videoseries?list=UUgI-dfAv5plhZQaNhfr4UcQ&rel=0"}
+function loadYT(){if(ytLoaded||FRAMED)return;ytLoaded=true;$("#yt").src="https://www.youtube.com/embed/videoseries?list=UUgI-dfAv5plhZQaNhfr4UcQ&rel=0"}
 
 /* ===== progreso en Lichess ===== */
 async function loadLichess(){
