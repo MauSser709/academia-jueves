@@ -687,9 +687,12 @@ async function loadLichess(){
   }catch(e){box.innerHTML=`<p style="color:var(--mut)">No pude leer el usuario “${LC}”. Revisá que esté bien escrito.</p><a class="btn" style="margin-top:10px" href="https://lichess.org/@/${encodeURIComponent(LC)}" target="_blank" rel="noopener">Abrir mi perfil en Lichess ↗</a>`}
 }
 
-/* ===== donaciones: completar con los links del profe ===== */
-const DON=[ /* ["☕ Invitar un cafecito","https://..."], ["💙 Donar con Mercado Pago","https://..."] */ ];
-if(DON.length){$("#don-sec").style.display="block";$("#don").innerHTML=DON.map((d,i)=>`<a class="btn${i===0?" primary":""}" href="${d[1]}" target="_blank" rel="noopener">${d[0]}</a>`).join("")}
+/* ===== donaciones ===== */
+const ALIAS="rafamiranda.mp";
+$("#don-sec").style.display="block";
+$("#don").innerHTML=`<button class="btn primary" id="don-copy">📋 Copiar alias</button><a class="btn" href="https://www.mercadopago.com.ar/" target="_blank" rel="noopener">💙 Abrir Mercado Pago</a>`;
+$("#don").insertAdjacentHTML("afterend",`<p class="note" style="text-align:center">Alias de Mercado Pago: <b style="color:var(--ink)">${ALIAS}</b><br>Copiá el alias y transferí el monto que quieras desde Mercado Pago o tu banco.</p>`);
+$("#don-copy").onclick=async()=>{try{await navigator.clipboard.writeText(ALIAS);toast("Alias copiado: "+ALIAS)}catch(e){toast(ALIAS)}};
 
 /* ===== tienda ===== */
 const SHOP=[
