@@ -122,6 +122,9 @@ nav button.on i{transform:translateY(-2px) scale(1.12)}
 .frame{position:relative;width:100%;border-radius:18px;overflow:hidden;border:1px solid var(--line);background:#000}
 .frame.v{aspect-ratio:16/9}
 .frame.board{aspect-ratio:10/8}
+@media (max-width:640px){.frame.board{aspect-ratio:auto;height:calc(min(100vw,720px) - 32px + 330px)}}
+.frame.pdf{aspect-ratio:auto;height:75vh;background:#fff}
+.pdfbtns{display:flex;flex-direction:column;gap:8px;margin-top:10px}
 .frame iframe{position:absolute;inset:0;width:100%;height:100%;border:0}
 .yt-head{display:flex;align-items:center;gap:10px;margin:14px 2px 8px}
 .yt-logo{width:36px;height:36px;border-radius:10px;background:#e0473a;display:grid;place-items:center;font-size:15px;color:#fff}
@@ -261,10 +264,14 @@ nav button.on i{transform:translateY(-2px) scale(1.12)}
       </div>
       <div class="frame board"><iframe id="board" title="Estudio de Lichess" allowfullscreen></iframe></div>
       <div class="row">
-        <a class="btn primary" id="solve" target="_blank" rel="noopener">♞ Resolver en Lichess</a>
+        <a class="btn primary" id="solve" target="_blank" rel="noopener">♞ Ver en Lichess</a>
         <a class="btn" id="analyze" target="_blank" rel="noopener">🔍 Analizar</a>
       </div>
-      <p class="note">En el tablero podés recorrer las jugadas con las flechas. “Resolver” abre el estudio completo en Lichess, con tu cuenta, para jugarlo y practicarlo.</p>
+      <div id="st-pdf" style="display:none">
+        <div class="pdfbtns" id="pdfbtns"></div>
+        <div class="frame pdf" id="pdfbox" style="display:none;margin-top:10px"><iframe id="pdfview" title="PDF del estudio"></iframe></div>
+      </div>
+      <p class="note">En el tablero podés recorrer las jugadas y leer las notas del profe. “Ver en Lichess” abre el estudio completo con tu cuenta.</p>
     </div>
   </section>
 
@@ -650,7 +657,24 @@ function showChapter(i){
   $("#solve").href=`https://lichess.org/study/${curStudy}/${ch.id}`;
   $("#analyze").href=`https://lichess.org/study/${curStudy}/${ch.id}#analysis`;
 }
+/* PDF de cada estudio (del material ya subido) */
+const STUDY_PDF={
+ cOo8YfpH:[["Resumen: Academia de los jueves","134Tr1vKtPvde-AFspmjf5aL924bJCLtH"]],
+ U8QTrD3n:[["Resumen de la clase 22/4 (peón torre)","1fVXx69tvz6m5cwkriuMqpdMX5zZVPssN"],["Resumen de la clase 24/4 (peón torre)","1Gy4BtXBMP6DPxWIErD2-QXDZcc_QZQZH"]]
+};
+function renderPdf(id){
+  const L=STUDY_PDF[id]||[];
+  $("#st-pdf").style.display=L.length?"block":"none";$("#pdfbox").style.display="none";$("#pdfview").removeAttribute("src");
+  $("#pdfbtns").innerHTML=L.map((p,i)=>`<button class="btn" data-pdf="${i}">📄 Ver PDF: ${p[0]}</button>`).join("")+(L.length?`<a class="btn" style="background:none" id="pdfopen" target="_blank" rel="noopener" href="${G("https://drive.google.com/file/d/"+L[0][1]+"/view")}">↗ Abrir el PDF aparte</a>`:"");
+  $("#pdfbtns").querySelectorAll("[data-pdf]").forEach(b=>b.onclick=()=>{const p=L[+b.dataset.pdf];
+    const open=$("#pdfbox").style.display==="block"&&$("#pdfview").dataset.id===p[1];
+    if(open){$("#pdfbox").style.display="none";return}
+    if(!FRAMED){$("#pdfview").src=G("https://drive.google.com/file/d/"+p[1]+"/preview");$("#pdfview").dataset.id=p[1];$("#pdfbox").style.display="block";}
+    $("#pdfopen").href=G("https://drive.google.com/file/d/"+p[1]+"/view");
+    if(FRAMED)window.open($("#pdfopen").href,"_blank");});
+}
 async function openStudy(id){
+  renderPdf(id);
   curStudy=id;
   document.querySelectorAll(".st").forEach(s=>s.classList.toggle("on",s.dataset.id===id));
   chapters=[{id:FIRST[id],name:"Capítulo 1"}];
