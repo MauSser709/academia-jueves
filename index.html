@@ -1,0 +1,636 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#14110f">
+<title>Academia de los Jueves</title>
+<link rel="manifest" href="manifest.json">
+<link rel="icon" href="icon-192.png">
+<link rel="apple-touch-icon" href="icon-192.png">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,600;9..144,800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#14110f; --panel:#1e1a17; --panel2:#272220; --line:#3a332e;
+  --ink:#f3ece3; --mut:#a89c90; --gold:#e8b04a; --gold2:#f6d48d;
+  --green:#6fbf8e; --red:#e0735f; --blue:#7fa8d9; --violet:#b48fd8;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{background:var(--bg);color:var(--ink);font-family:Inter,system-ui,sans-serif;font-size:15px;line-height:1.5}
+body{padding-bottom:84px;min-height:100vh;
+  background-image:
+   linear-gradient(45deg,rgba(255,255,255,.018) 25%,transparent 25%,transparent 75%,rgba(255,255,255,.018) 75%),
+   linear-gradient(45deg,rgba(255,255,255,.018) 25%,transparent 25%,transparent 75%,rgba(255,255,255,.018) 75%);
+  background-size:56px 56px;background-position:0 0,28px 28px}
+a{color:inherit;text-decoration:none}
+.wrap{max-width:720px;margin:0 auto;padding:20px 16px}
+h1,h2,h3{font-family:Fraunces,Georgia,serif;letter-spacing:-.01em}
+header{display:flex;align-items:center;gap:12px;margin-bottom:18px}
+.logo{width:44px;height:44px;border-radius:12px;background:var(--gold);display:grid;place-items:center;font-size:26px;color:var(--bg);box-shadow:0 6px 20px rgba(232,176,74,.25)}
+header h1{font-size:22px;line-height:1.1}
+header p{color:var(--mut);font-size:13px}
+.view{display:none;animation:in .35s ease}
+.view.on{display:block}
+@keyframes in{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+
+/* hero */
+.hero{background:radial-gradient(120% 140% at 100% 0%,#3b2c14 0%,var(--panel) 55%);border:1px solid var(--line);border-radius:22px;padding:22px;position:relative;overflow:hidden}
+.hero .knight{position:absolute;right:-10px;bottom:-30px;font-size:170px;opacity:.07;line-height:1}
+.tag{display:inline-flex;align-items:center;gap:6px;font-size:12px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:var(--gold2)}
+.dot{width:8px;height:8px;border-radius:50%;background:var(--gold)}
+.live .dot{background:var(--red);animation:pulse 1.2s infinite}
+@keyframes pulse{50%{box-shadow:0 0 0 8px rgba(224,115,95,0)}0%{box-shadow:0 0 0 0 rgba(224,115,95,.6)}}
+.hero h2{font-size:26px;margin:6px 0 2px}
+.hero .when{color:var(--mut)}
+.count{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin:18px 0}
+.count div{background:rgba(0,0,0,.28);border:1px solid var(--line);border-radius:14px;padding:10px 0;text-align:center}
+.count b{display:block;font-family:Fraunces,serif;font-size:28px;color:var(--gold2);font-variant-numeric:tabular-nums}
+.count span{font-size:11px;color:var(--mut);text-transform:uppercase;letter-spacing:.08em}
+.btn{display:flex;align-items:center;justify-content:center;gap:8px;padding:14px 16px;border-radius:14px;font-weight:600;border:1px solid var(--line);background:var(--panel2);cursor:pointer;font-size:15px;color:var(--ink);width:100%}
+.btn.primary{background:var(--gold);color:#1b1408;border-color:var(--gold)}
+.btn.primary:active{transform:scale(.98)}
+.row{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:10px}
+
+/* tiles */
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:16px}
+.tile{background:var(--panel);border:1px solid var(--line);border-radius:18px;padding:16px;display:flex;flex-direction:column;gap:6px;transition:transform .15s,border-color .15s;cursor:pointer}
+.tile:hover{border-color:var(--gold);transform:translateY(-2px)}
+.tile .ic{font-size:26px}
+.tile b{font-size:15px}
+.tile small{color:var(--mut);font-size:12.5px}
+
+.sec{margin-top:26px}
+.sec h3{font-size:19px;margin-bottom:10px;display:flex;align-items:baseline;justify-content:space-between}
+.sec h3 small{font-family:Inter;font-size:12px;color:var(--mut);font-weight:500}
+.card{background:var(--panel);border:1px solid var(--line);border-radius:18px;padding:16px}
+
+/* stats */
+.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+.stat{background:var(--panel);border:1px solid var(--line);border-radius:16px;padding:14px;text-align:center}
+.stat b{font-family:Fraunces,serif;font-size:30px;color:var(--gold2);display:block;line-height:1.1}
+.stat span{font-size:12px;color:var(--mut)}
+.bars{display:flex;align-items:flex-end;gap:8px;height:150px;padding-top:10px}
+.bar{flex:1;display:flex;flex-direction:column;align-items:center;gap:6px;height:100%;justify-content:flex-end}
+.bar i{display:block;width:100%;border-radius:8px 8px 3px 3px;background:linear-gradient(var(--gold2),var(--gold));height:0;transition:height .9s cubic-bezier(.2,.8,.2,1)}
+.bar em{font-style:normal;font-size:11px;color:var(--mut)}
+.bar s{text-decoration:none;font-size:12px;font-weight:600}
+.donutbox{display:flex;align-items:center;gap:18px;flex-wrap:wrap}
+.legend{display:flex;flex-direction:column;gap:6px;font-size:13.5px}
+.legend span{display:flex;align-items:center;gap:8px}
+.legend i{width:12px;height:12px;border-radius:4px;display:inline-block}
+
+/* lists */
+.chips{display:flex;gap:8px;overflow-x:auto;padding-bottom:6px;margin-bottom:10px;scrollbar-width:none}
+.chip{flex:none;padding:7px 13px;border-radius:999px;border:1px solid var(--line);background:var(--panel);font-size:13px;cursor:pointer;color:var(--mut)}
+.chip.on{background:var(--ink);color:var(--bg);border-color:var(--ink)}
+.month{font-family:Fraunces,serif;color:var(--gold2);font-size:15px;margin:18px 0 8px 4px}
+.item{display:flex;gap:12px;align-items:center;background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:12px;margin-bottom:8px;transition:border-color .15s}
+.item:hover{border-color:var(--gold)}
+.badge{width:42px;height:42px;flex:none;border-radius:12px;display:grid;place-items:center;font-size:21px}
+.item .t{flex:1;min-width:0}
+.item .t b{display:block;font-weight:600;font-size:14.5px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.item .t small{color:var(--mut);font-size:12.5px}
+.item .go{color:var(--mut);font-size:18px}
+input.search{width:100%;padding:12px 14px;border-radius:14px;border:1px solid var(--line);background:var(--panel);color:var(--ink);font-size:15px;margin-bottom:12px;font-family:inherit}
+
+/* summaries */
+.sum{background:var(--panel);border:1px solid var(--line);border-radius:18px;margin-bottom:14px;overflow:hidden}
+.sum-h{padding:16px;cursor:pointer;display:flex;gap:12px;align-items:center}
+.sum-h .d{background:var(--gold);color:#1b1408;border-radius:12px;padding:6px 10px;font-weight:700;text-align:center;line-height:1.1;font-size:12px}
+.sum-h .d b{display:block;font-size:20px;font-family:Fraunces,serif}
+.sum-h h4{font-family:Fraunces,serif;font-size:17px;line-height:1.2}
+.sum-h small{color:var(--mut)}
+.sum-b{display:none;padding:0 16px 16px}
+.sum.open .sum-b{display:block;animation:in .3s}
+.idea{display:flex;gap:10px;padding:10px 0;border-top:1px solid var(--line)}
+.idea .n{width:26px;height:26px;flex:none;border-radius:8px;background:var(--panel2);display:grid;place-items:center;font-size:12px;font-weight:700;color:var(--gold2)}
+.idea b{display:block;font-size:14.5px}
+.idea p{color:var(--mut);font-size:13.5px}
+.quote{margin-top:12px;padding:14px;border-radius:14px;background:linear-gradient(135deg,#3b2c14,#2a2018);border:1px solid #5a4422;font-family:Fraunces,serif;font-size:16px}
+.flow{display:flex;flex-wrap:wrap;gap:6px;margin-top:8px}
+.flow span{background:var(--panel2);border:1px solid var(--line);border-radius:10px;padding:6px 10px;font-size:12.5px}
+.flow span:not(:last-child)::after{content:" →";color:var(--gold)}
+
+/* nav */
+nav{position:fixed;left:0;right:0;bottom:0;background:rgba(20,17,15,.92);backdrop-filter:blur(10px);border-top:1px solid var(--line);display:flex;justify-content:center;z-index:5}
+nav .in{display:flex;max-width:720px;width:100%}
+nav button{flex:1;min-width:0;background:none;border:0;color:var(--mut);padding:10px 0 12px;display:flex;flex-direction:column;align-items:center;gap:2px;font-size:10.5px;font-family:inherit;cursor:pointer}
+nav button i{font-style:normal;font-size:21px;transition:transform .2s}
+nav button.on{color:var(--gold2)}
+nav button.on i{transform:translateY(-2px) scale(1.12)}
+.note{font-size:12.5px;color:var(--mut);margin-top:10px}
+.frame{position:relative;width:100%;border-radius:18px;overflow:hidden;border:1px solid var(--line);background:#000}
+.frame.v{aspect-ratio:16/9}
+.frame.board{aspect-ratio:10/8}
+.frame iframe{position:absolute;inset:0;width:100%;height:100%;border:0}
+.yt-head{display:flex;align-items:center;gap:10px;margin:14px 2px 8px}
+.yt-logo{width:36px;height:36px;border-radius:10px;background:#e0473a;display:grid;place-items:center;font-size:15px;color:#fff}
+.studies{display:flex;gap:10px;overflow-x:auto;padding-bottom:8px;scrollbar-width:none}
+.st{flex:none;width:150px;padding:12px;border-radius:16px;background:var(--panel);border:1px solid var(--line);cursor:pointer;display:flex;flex-direction:column;gap:6px}
+.st.on{border-color:var(--gold);background:#2d2418}
+.st .ic{font-size:22px}
+.st b{font-size:13.5px;line-height:1.25}
+.st small{color:var(--mut);font-size:12px}
+.chap{display:flex;gap:8px;align-items:center;margin:10px 0}
+.chap select{flex:1;min-width:0;padding:10px;border-radius:12px;background:var(--panel);color:var(--ink);border:1px solid var(--line);font-family:inherit;font-size:13.5px}
+.chap button{width:44px;height:42px;border-radius:12px;background:var(--panel2);border:1px solid var(--line);color:var(--ink);font-size:16px;cursor:pointer}
+.prof{display:flex;align-items:center;gap:12px}
+.prof .av{width:48px;height:48px;border-radius:14px;background:var(--panel2);display:grid;place-items:center;font-size:24px}
+.rt{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;margin-top:12px}
+.rt div{background:var(--panel2);border-radius:14px;padding:12px}
+.rt b{font-family:Fraunces,serif;font-size:24px;color:var(--gold2)}
+.rt small{display:block;color:var(--mut);font-size:12px}
+.rt em{font-style:normal;font-size:12px;font-weight:600}
+.up{color:var(--green)}.dn{color:var(--red)}
+.spark{width:100%;height:70px;margin-top:12px}
+.shop{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.shop a{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:10px;font-size:12.5px;color:var(--mut)}
+.shop a b{display:block;color:var(--ink);font-size:13px;font-weight:600}
+.modal{position:fixed;inset:0;background:rgba(10,8,7,.85);backdrop-filter:blur(6px);display:none;align-items:center;justify-content:center;z-index:20;padding:20px}
+.modal.on{display:flex}
+.modal .box{background:var(--panel);border:1px solid var(--line);border-radius:22px;padding:22px;max-width:400px;width:100%;animation:in .3s}
+.modal h3{font-size:21px;margin-bottom:6px}
+.modal p{color:var(--mut);font-size:13.5px;margin-bottom:14px}
+.modal label{font-size:12.5px;color:var(--mut);display:block;margin:10px 0 4px}
+.modal input{width:100%;padding:12px 14px;border-radius:12px;border:1px solid var(--line);background:var(--bg);color:var(--ink);font-size:15px;font-family:inherit}
+.acct{display:flex;align-items:center;gap:10px;font-size:13px;color:var(--mut);margin-top:-8px;margin-bottom:14px;cursor:pointer}
+.acct b{color:var(--ink);font-weight:500}
+.toast{position:fixed;left:50%;bottom:96px;transform:translateX(-50%) translateY(20px);background:var(--ink);color:var(--bg);padding:10px 16px;border-radius:12px;font-size:13.5px;opacity:0;transition:.25s;pointer-events:none;z-index:9}
+.toast.on{opacity:1;transform:translateX(-50%)}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <div class="logo">♞</div>
+    <div>
+      <h1>Academia de los Jueves</h1>
+      <p>Ajedrez en Minutos · MF Rafael Miranda</p>
+    </div>
+  </header>
+  <div class="acct" id="acct">👤 <span>Viendo como <b id="acct-mail">—</b> · cambiar</span></div>
+
+  <!-- INICIO -->
+  <section class="view on" id="v-inicio">
+    <div class="hero" id="hero">
+      <div class="knight">♞</div>
+      <div class="tag" id="htag"><span class="dot"></span><span id="hstate">Próxima clase</span></div>
+      <h2 id="hday">Jueves</h2>
+      <div class="when" id="hwhen">19:30 hs (Argentina) · Google Meet</div>
+      <div class="count" id="count">
+        <div><b id="cd">0</b><span>días</span></div>
+        <div><b id="ch">0</b><span>horas</span></div>
+        <div><b id="cm">0</b><span>min</span></div>
+        <div><b id="cs">0</b><span>seg</span></div>
+      </div>
+      <a class="btn primary" href="https://meet.google.com/ore-gzbd-auh" target="_blank" rel="noopener">🎥 Entrar a la clase</a>
+      <div class="row">
+        <a class="btn" id="cal" target="_blank" rel="noopener">🔔 Recordatorio</a>
+        <button class="btn" id="copy">🔗 Copiar link</button>
+      </div>
+      <p class="note">El recordatorio crea la clase semanal en tu Google Calendar: te avisa en el celular aunque la app esté cerrada.</p>
+    </div>
+
+    <div class="grid">
+      <div class="tile" data-go="clases"><span class="ic">🎬</span><b>Clases grabadas</b><small id="t-clases">—</small></div>
+      <div class="tile" data-go="resumenes"><span class="ic">📝</span><b>Resúmenes</b><small id="t-res">—</small></div>
+      <div class="tile" data-go="estudios"><span class="ic">♟</span><b>Estudios interactivos</b><small>Del profe en Lichess</small></div>
+      <div class="tile" data-go="mas"><span class="ic">📈</span><b>Mi progreso</b><small id="t-prog">Tu perfil de Lichess</small></div>
+    </div>
+
+    <div class="sec">
+      <h3>El curso en números <small>desde febrero 2026</small></h3>
+      <div class="stats">
+        <div class="stat"><b id="s-total">0</b><span>clases grabadas</span></div>
+        <div class="stat"><b id="s-hours">0</b><span>horas de video</span></div>
+        <div class="stat"><b id="s-streak">0</b><span>meses seguidos</span></div>
+      </div>
+    </div>
+    <div class="sec">
+      <h3>Clases por mes</h3>
+      <div class="card"><div class="bars" id="bars"></div></div>
+    </div>
+    <div class="sec">
+      <h3>De qué se habló</h3>
+      <div class="card donutbox"><svg id="donut" width="150" height="150" viewBox="0 0 42 42"></svg><div class="legend" id="legend"></div></div>
+    </div>
+  </section>
+
+  <!-- CLASES -->
+  <section class="view" id="v-clases">
+    <div class="sec" style="margin-top:0">
+      <h3>Clases grabadas <small><a href="https://drive.google.com/drive/folders/1nIPiF1T3zNd7AU7wjrYqtcDEUaclvLKr" target="_blank" rel="noopener" style="color:var(--gold2)">Abrir carpeta en Drive ↗</a></small></h3>
+      <input class="search" id="q" placeholder="Buscar clase, tema o jugador…">
+      <div class="chips" id="chips"></div>
+      <div id="list"></div>
+    </div>
+  </section>
+
+  <!-- RESUMENES -->
+  <section class="view" id="v-resumenes">
+    <div class="sec" style="margin-top:0">
+      <h3>Resúmenes <small><a href="https://docs.google.com/document/d/12JeK6Y1XgNPojcxIpeaNmxLomZdWMYzJGKKEzaCNewo/edit" target="_blank" rel="noopener" style="color:var(--gold2)">Doc completo ↗</a></small></h3>
+      <div id="sums"></div>
+    </div>
+  </section>
+
+  <!-- ESTUDIOS -->
+  <section class="view" id="v-estudios">
+    <div class="sec" style="margin-top:0">
+      <h3>Estudios del profe <small><a href="https://lichess.org/study/by/Th3Hound" target="_blank" rel="noopener" style="color:var(--gold2)">Todos en Lichess ↗</a></small></h3>
+      <div class="studies" id="studies"></div>
+      <div class="chap">
+        <button id="prev" aria-label="Capítulo anterior">‹</button>
+        <select id="chsel"><option>Cargando capítulos…</option></select>
+        <button id="next" aria-label="Capítulo siguiente">›</button>
+      </div>
+      <div class="frame board"><iframe id="board" title="Estudio de Lichess" allowfullscreen></iframe></div>
+      <div class="row">
+        <a class="btn primary" id="solve" target="_blank" rel="noopener">♞ Resolver en Lichess</a>
+        <a class="btn" id="analyze" target="_blank" rel="noopener">🔍 Analizar</a>
+      </div>
+      <p class="note">En el tablero podés recorrer las jugadas con las flechas. “Resolver” abre el estudio completo en Lichess, con tu cuenta, para jugarlo y practicarlo.</p>
+    </div>
+  </section>
+
+  <!-- VIDEOS -->
+  <section class="view" id="v-videos">
+    <div class="sec" style="margin-top:0">
+      <div class="yt-head"><div class="yt-logo">▶</div><div><b>Ajedrez en Minutos</b><br><small style="color:var(--mut)">Último video del canal</small></div></div>
+      <div class="frame v"><iframe id="yt" title="Último video de Ajedrez en Minutos" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe></div>
+      <div class="row">
+        <a class="btn" href="https://www.youtube.com/channel/UCgI-dfAv5plhZQaNhfr4UcQ/videos" target="_blank" rel="noopener">📺 Ver el canal</a>
+        <a class="btn" href="https://www.youtube.com/channel/UCgI-dfAv5plhZQaNhfr4UcQ?sub_confirmation=1" target="_blank" rel="noopener">🔔 Suscribirme</a>
+      </div>
+      <p class="note">Desde el reproductor podés pasar a los videos anteriores (botón de lista, arriba a la derecha).</p>
+    </div>
+  </section>
+
+  <!-- MAS -->
+  <section class="view" id="v-mas">
+    <div class="sec" style="margin-top:0">
+      <h3>Mi progreso en Lichess <small id="lc-edit" style="cursor:pointer;color:var(--gold2)">cambiar usuario</small></h3>
+      <div class="card" id="lc">Cargando…</div>
+    </div>
+    <div class="sec">
+      <h3>Material del profe <small>compartido en Telegram</small></h3>
+      <div id="mat"></div>
+      <p class="note">Los archivos están en el grupo de Telegram “Academia Ajedrez en Minutos (Jueves)”, pestaña Archivos.</p>
+    </div>
+    <div class="sec">
+      <h3>Campus y cuentas</h3>
+      <div id="links"></div>
+    </div>
+    <div class="sec">
+      <h3 style="font-size:16px">Cursos de Ajedrez en Minutos <small>tienda</small></h3>
+      <div class="shop" id="shop"></div>
+    </div>
+  </section>
+
+  <!-- PRIMER INGRESO -->
+  <div class="modal" id="setup"><div class="box">
+    <h3>♞ Bienvenido</h3>
+    <p>Elegí una sola vez la cuenta con la que ves el curso. La app abre el Meet, el Drive y los resúmenes con esa cuenta.</p>
+    <label for="f-mail">Tu correo de Google del curso</label>
+    <input id="f-mail" type="email" placeholder="nombre@gmail.com" autocomplete="email">
+    <label for="f-lc">Tu usuario de Lichess (opcional)</label>
+    <input id="f-lc" placeholder="ej. MiUsuario" autocapitalize="off">
+    <button class="btn primary" id="f-ok" style="margin-top:16px">Guardar y entrar</button>
+  </div></div>
+</div>
+
+<nav><div class="in">
+  <button data-go="inicio" class="on"><i>♔</i>Inicio</button>
+  <button data-go="clases"><i>🎬</i>Clases</button>
+  <button data-go="resumenes"><i>📝</i>Resúmenes</button>
+  <button data-go="estudios"><i>♟</i>Estudios</button>
+  <button data-go="videos"><i>▶</i>Videos</button>
+  <button data-go="mas"><i>☰</i>Más</button>
+</div></nav>
+<div class="toast" id="toast"></div>
+
+<script>
+const MEET="https://meet.google.com/ore-gzbd-auh";
+const CAT={
+  estr:{n:"Estrategia",c:"#e8b04a",i:"♜"},
+  final:{n:"Finales",c:"#6fbf8e",i:"♚"},
+  clas:{n:"Partidas clásicas",c:"#7fa8d9",i:"♛"},
+  calc:{n:"Táctica y cálculo",c:"#e0735f",i:"♞"}
+};
+const V=id=>"https://drive.google.com/file/d/"+id+"/view";
+// [título, fecha ISO, categoría, id Drive, MB]
+const CLASES=[
+["Karpov vs Korchnoi","2026-10-29","clas","1goOyTvyHFDveTvHiQs9NF8HyI5rE7S2H",265],
+["Partida de ataque de Karpov","2026-10-22","clas","19OEH_RkynOztcyBpjqr9R59F3iK2-8fe",225],
+["Mejora de piezas: la torre","2026-10-15","estr","1dDcKMu3TIuHAzlmRDLbDlxRbyrdUUGPO",246],
+["Mejora y cambios de piezas","2026-10-08","estr","1cZbutrSQUSj575CsR99MkH-ampT0C3Xj",256],
+["Acerca del enroque y falsas casillas","2026-10-01","estr","1BTBCkcX5S8BOU5Z3C9Q63fG_5eBr-MFa",248],
+["Geller · Najdorf Ae2","2026-09-29","clas","1J-L8qsiSDUJv2GdqrJB6hhmaVBju9389",261],
+["Partida de ataque","2026-09-24","calc","183-2IIgMo8jkRbn0Cbw_95D8NkbllIhX",261],
+["Entrenamiento posicional","2026-09-17","estr","1Ati7ujHx2cIEcseDE5vekagOJyKxxZm2",231],
+["Mejora de piezas","2026-09-10","estr","1uRW1bYcNA6hQQddYDzF50Lhec_nkiBMB",200],
+["Cambios de piezas y tensión","2026-09-03","estr","1t-mj2Jvugi1UDx2u44zWvaE5SuGNVnJO",201],
+["Ideas estratégicas en distintas estructuras","2026-08-20","estr","1EW6yGRUbjZ1JJIkOMuJv2MQ4u8iQE79G",185],
+["Concepto de provocación","2026-08-13","estr","1yImxBvdzyfD9I43Q4jxhZDS2fQ0O30fD",198],
+["Alfiles del mismo color en el final","2026-08-06","final","1qUhgfRHumlmrVMBfE9xeBMWciQVJyiuq",218],
+["Finales de torre (II)","2026-07-30","final","1GFx9P6x7z6DSYLhX1MMUUhj-H5O97TVC",839],
+["Finales de torre (I)","2026-07-23","final","1FFD1goHxfHkJQ-K6M2LMjW6nSrxpS4L1",549],
+["Finales de reyes","2026-07-16","final","16xsE6w4APMpUcwCNHeS3nedmmEWmowma",533],
+["Alekhine vs Capablanca, análisis","2026-07-02","clas","1UP6dT_yX3MwAoCNb9FkSBPWCEbQYExe3",258],
+["La pareja de alfiles","2026-06-25","estr","1uHXMo2XlBQyu1QT-pTHz8jgt7VCpN1Mz",741],
+["Botvinnik vs Alekhine","2026-06-18","clas","1d1oDpx6YTD-tpNhYO2-PpXzvXhqiP69t",401],
+["Lasker vs Capablanca","2026-06-11","clas","1J4Nr2GC2MYa-OgmHcXKyUXlRLQ9ie6Jw",546],
+["Peón aislado: idea temática","2026-06-04","estr","12awkmQn0VFeunMj0DwvLslJSqnbDlROW",681],
+["Clase del 28/5","2026-05-28","estr","1JeS1-IjiBMv6pnYqREXRtfsfrznPoneD",333],
+["Peón aislado d","2026-05-14","estr","1UWV8GLPbqbhrvqc3YDztS4v4oXiimZT2",409],
+["Ir en contra de los principios","2026-05-07","estr","1jIxGo4vO_StePhJArIjMJqgqQBd_tGpu",726],
+["Pensamiento preventivo","2026-04-30","calc","1yUgd4kIBnjI_z2nEDyBZ2-33EnLmld-F",478],
+["El peón torre como luchador","2026-04-23","estr","1Meym4mPDqX3HaTrlNNdBULd4tXsZaZgr",263],
+["Patrones posicionales","2026-04-16","estr","1klZhdHUs88CZreQct9HuqERms6tl8FEO",226],
+["Conceptos posicionales","2026-04-09","estr","1c_4ZcFGlyBXmVP4siixq4f0aut_r6Il1",224],
+["Rotlewi vs Rubinstein","2026-03-26","clas","1VA2uEDlWLZ_zzKkoHlP4XCQRydQ4xrVF",257],
+["Capablanca","2026-03-19","clas","1WlpJP5GTQ2ztS8Kj_dVyvllv4iqSvpaL",241],
+["Ideas en finales de alfil vs caballo","2026-03-12","final","1oSspX4WZhFMRl1UeUl9GUgDoEvj5sJ1k",448],
+["Análisis de partida aguda","2026-02-26","calc","1A5KUtJGEFopIO5WnNLkcPWeQnn8Zs44c",256],
+["Clase 3","2026-02-23","estr","19Bh3lpMLh-F2W-OvG2yPVlZTzZPH1ZrD",292],
+["Cambios de piezas e ideas","2026-02-12","estr","1LO_E88GulbdFauW4WoXhD1xA3N2BDB8l",326],
+["Jugadas forzadas y ser concreto","2026-02-05","calc","1CKbeAezRCbYkzWpXMiU2_kAdBclFas_A",235]
+];
+const RES=[
+ {f:"25/9",dia:"25",mes:"SEP",t:"Partida de ataque",sub:"La táctica también se construye",
+  ideas:[
+   ["Antes de calcular, entender la posición","Material, seguridad de los reyes, estructura, piezas buenas y malas, debilidades."],
+   ["Primero, las jugadas forzadas","Jaques → capturas → amenazas, antes que los planes tranquilos."],
+   ["Provocación","Amenazar para provocar una reacción, solo si obtenemos algo concreto."],
+   ["Las concesiones se justifican","Siempre preguntarse: ¿qué obtengo a cambio?"],
+   ["La táctica se construye","Activar piezas, abrir líneas y provocar debilidades para que aparezca el golpe."],
+   ["Iniciativa","Encadenar amenazas mientras mejoramos las piezas."],
+   ["La posición indica qué hacer","Si pide atacar, acelerar; si no hay táctica, mejorar piezas; si estamos peor, defender."],
+   ["Ajedrez práctico","Elegir la opción que reduce nuestras chances de error y mantiene los problemas del rival."]
+  ],
+  flow:["Entender","Forzadas","Plan","Cálculo"],
+  q:"La táctica no aparece de la nada: las buenas decisiones posicionales siembran el terreno.",
+  tarea:"Analizar partidas sin comentarios y sin módulo, elegir candidatas y justificar. Recién al final, comparar."},
+ {f:"1/10",dia:"1",mes:"OCT",t:"Cuándo no enrocar y falsas casillas",sub:"Flexibilidad y justificación",
+  ideas:[
+   ["Toda jugada tiene pros y contras","Sobre todo los peones: no vuelven atrás. ¿Lo que consigo supera lo que cedo?"],
+   ["Romper principios requiere justificación","“Hice esto porque consigo esto otro.”"],
+   ["Una debilidad solo importa si puede explotarse","Distinguir debilidad real de debilidad potencial."],
+   ["Ceder una casilla para conseguir otra","Cuidado con el “caballo decorativo”: lindo, pero sin efecto."],
+   ["No mover peones automáticamente","Cada avance crea ganchos para rupturas del rival."],
+   ["No enrocarse por costumbre","Si el rey ya está seguro o viene un final, quizás conviene dejarlo en el centro."],
+   ["Pensamiento esquemático","Imaginar la “foto ideal”, armar el plan y verificar con cálculo."],
+   ["Visualización y cálculo se entrenan","Resolver táctica sin mover piezas y sin adivinar."]
+  ],
+  flow:["¿Qué quiero?","¿Dónde mis piezas?","Plan","Orden","¿Qué hace el rival?"],
+  q:"No obedecer los principios ciegamente, ni romperlos porque sí.",
+  tarea:""}
+];
+const MAT=[
+ ["El arte del Ataque en el Ajedrez","PGN · 784 KB","22/10/2026","♞"],
+ ["Conceptos estratégicos · Ajedrez en Minutos","PDF · 2,6 MB","9/10/2026","📘"],
+ ["Descubriendo los conceptos en ajedrez (Hellsten)","PDF · 10,9 MB","3/10/2026","📕"],
+ ["Reglas de la academia","PDF · 27 KB","17/9/2026","📋"],
+ ["Valerga · El cambio de piezas","PDF · 8,3 MB","3/9/2026","📗"],
+ ["Pareja de alfiles","PDF · 821 KB","29/6/2026","♝"],
+ ["Alekhine resumido","PGN · 345 KB","20/6/2026","♛"],
+ ["Resumen: proceso de pensamiento","PDF · 9 KB","1/6/2026","🧠"]
+];
+const LINKS=[
+ ["♛","Mi Campus","Videoclases, minicursos y material","https://ajedrezenminutos.com/mi-campus/"],
+ ["🔑","Iniciar sesión","Tu cuenta de Ajedrez en Minutos","https://ajedrezenminutos.com/my-account/"],
+ ["🎥","Meet de la clase","Jueves 19:30 hs","https://meet.google.com/ore-gzbd-auh"],
+ ["📂","Drive del curso","Grabaciones por mes","https://drive.google.com/drive/folders/1nIPiF1T3zNd7AU7wjrYqtcDEUaclvLKr"],
+ ["📝","Doc de resúmenes","Academia de los jueves","https://docs.google.com/document/d/12JeK6Y1XgNPojcxIpeaNmxLomZdWMYzJGKKEzaCNewo/edit"],
+ ["🔥","Puzzle Streak","Entrenamiento recomendado en Lichess","https://lichess.org/streak"],
+ ["🌐","ajedrezenminutos.com","Web del profe","https://ajedrezenminutos.com/"]
+];
+const MESES=["Ene","Feb","Mar","Abr","May","Jun","Jul","Ago","Sep","Oct","Nov","Dic"];
+const MESL=["Enero","Febrero","Marzo","Abril","Mayo","Junio","Julio","Agosto","Septiembre","Octubre","Noviembre","Diciembre"];
+const $=s=>document.querySelector(s);
+const toast=m=>{const t=$("#toast");t.textContent=m;t.classList.add("on");setTimeout(()=>t.classList.remove("on"),1800)};
+const fmt=d=>{const [y,m,dd]=d.split("-");return +dd+" "+MESES[+m-1]};
+
+/* navegación */
+function go(v){
+  document.querySelectorAll(".view").forEach(e=>e.classList.toggle("on",e.id==="v-"+v));
+  document.querySelectorAll("nav button").forEach(b=>b.classList.toggle("on",b.dataset.go===v));
+  if(location.hash!=="#"+v)history.replaceState(null,"","#"+v);
+  window.scrollTo({top:0});
+  if(v==="inicio")animBars();
+}
+document.querySelectorAll("[data-go]").forEach(b=>b.onclick=()=>go(b.dataset.go));
+window.addEventListener("hashchange",()=>go(location.hash.slice(1)||"inicio"));
+
+/* cuenta regresiva: jueves 19:30 ART (UTC-3) = 22:30 UTC, ~90 min */
+function nextClass(now){
+  const d=new Date(now);
+  const t=new Date(Date.UTC(d.getUTCFullYear(),d.getUTCMonth(),d.getUTCDate(),22,30));
+  let add=(4-t.getUTCDay()+7)%7; t.setUTCDate(t.getUTCDate()+add);
+  if(now>t.getTime()+90*60000) t.setUTCDate(t.getUTCDate()+7);
+  return t;
+}
+function tick(){
+  const now=Date.now(), t=nextClass(now), diff=t-now;
+  const live=diff<=0;
+  $("#hero").classList.toggle("live",live);
+  $("#htag").classList.toggle("live",live);
+  $("#hstate").textContent=live?"En vivo ahora":"Próxima clase";
+  const dd=new Date(t.getTime()-3*3600000);
+  $("#hday").textContent=live?"¡La clase empezó!":"Jueves "+dd.getUTCDate()+" de "+MESL[dd.getUTCMonth()].toLowerCase();
+  $("#count").style.display=live?"none":"grid";
+  const s=Math.max(0,Math.floor(diff/1000));
+  $("#cd").textContent=Math.floor(s/86400);
+  $("#ch").textContent=Math.floor(s%86400/3600);
+  $("#cm").textContent=Math.floor(s%3600/60);
+  $("#cs").textContent=s%60;
+}
+tick();setInterval(tick,1000);
+
+/* recordatorio en Google Calendar */
+(function(){
+  const t=nextClass(Date.now()), e=new Date(t.getTime()+90*60000);
+  const z=d=>d.toISOString().replace(/[-:]/g,"").replace(/\.\d+/,"");
+  const u="https://calendar.google.com/calendar/render?action=TEMPLATE"
+   +"&text="+encodeURIComponent("♞ Academia de los Jueves – Ajedrez en Minutos")
+   +"&dates="+z(t)+"/"+z(e)
+   +"&ctz=America/Argentina/Buenos_Aires"
+   +"&recur="+encodeURIComponent("RRULE:FREQ=WEEKLY;BYDAY=TH")
+   +"&location="+encodeURIComponent(MEET)
+   +"&details="+encodeURIComponent("Clase grupal con MF Rafael Miranda.\nMeet: "+MEET);
+  $("#cal").href=u;
+})();
+$("#copy").onclick=async()=>{try{await navigator.clipboard.writeText(MEET);toast("Link del Meet copiado")}catch(e){toast(MEET)}};
+
+/* estadísticas */
+$("#s-total").textContent=CLASES.length;
+$("#s-hours").textContent="~"+Math.round(CLASES.length*1.5);
+$("#t-clases").textContent=CLASES.length+" clases en Drive";
+$("#t-res").textContent=RES.length+" clases resumidas";
+const byM={};CLASES.forEach(c=>{const k=c[1].slice(0,7);byM[k]=(byM[k]||0)+1});
+const months=[];for(let m=2;m<=11;m++){months.push("2026-"+String(m).padStart(2,"0"))}
+let streak=0,cur=0;months.forEach(k=>{if(byM[k]){cur++;streak=Math.max(streak,cur)}else cur=0});
+$("#s-streak").textContent=streak;
+const max=Math.max(...Object.values(byM));
+$("#bars").innerHTML=months.map(k=>`<div class="bar"><s>${byM[k]||""}</s><i data-h="${(byM[k]||0)/max*100}"></i><em>${MESES[+k.slice(5)-1]}</em></div>`).join("");
+function animBars(){document.querySelectorAll(".bar i").forEach(i=>{i.style.height="0";requestAnimationFrame(()=>setTimeout(()=>i.style.height=i.dataset.h+"%",60))})}
+animBars();
+/* dona por tema */
+(function(){
+  const cnt={};CLASES.forEach(c=>cnt[c[2]]=(cnt[c[2]]||0)+1);
+  let off=25,html='<circle cx="21" cy="21" r="15.9" fill="none" stroke="#272220" stroke-width="6"/>';
+  Object.keys(CAT).forEach(k=>{const p=(cnt[k]||0)/CLASES.length*100;
+    html+=`<circle cx="21" cy="21" r="15.9" fill="none" stroke="${CAT[k].c}" stroke-width="6" stroke-dasharray="${p} ${100-p}" stroke-dashoffset="${off}"/>`;off-=p});
+  html+=`<text x="21" y="22" text-anchor="middle" fill="#f3ece3" font-size="8" font-family="Fraunces,serif">${CLASES.length}</text><text x="21" y="27" text-anchor="middle" fill="#a89c90" font-size="3">clases</text>`;
+  $("#donut").innerHTML=html;
+  $("#legend").innerHTML=Object.keys(CAT).map(k=>`<span><i style="background:${CAT[k].c}"></i>${CAT[k].n} · <b>${cnt[k]||0}</b></span>`).join("");
+})();
+
+/* lista de clases */
+let filt="all";
+$("#chips").innerHTML=`<button class="chip on" data-f="all">Todas</button>`+Object.keys(CAT).map(k=>`<button class="chip" data-f="${k}">${CAT[k].i} ${CAT[k].n}</button>`).join("");
+$("#chips").onclick=e=>{const b=e.target.closest(".chip");if(!b)return;filt=b.dataset.f;document.querySelectorAll(".chip").forEach(c=>c.classList.toggle("on",c===b));renderList()};
+$("#q").oninput=renderList;
+function renderList(){
+  const q=$("#q").value.toLowerCase().normalize("NFD").replace(/[̀-ͯ]/g,"");
+  let last="",h="";
+  CLASES.filter(c=>(filt==="all"||c[2]===filt)&&c[0].toLowerCase().normalize("NFD").replace(/[̀-ͯ]/g,"").includes(q)).forEach(c=>{
+    const m=c[1].slice(0,7);
+    if(m!==last){h+=`<div class="month">${MESL[+m.slice(5)-1]} ${m.slice(0,4)}</div>`;last=m}
+    const k=CAT[c[2]];
+    h+=`<a class="item" href="${V(c[3])}" target="_blank" rel="noopener"><div class="badge" style="background:${k.c}22;color:${k.c}">${k.i}</div><div class="t"><b>${c[0]}</b><small>${fmt(c[1])} · ${k.n}</small></div><span class="go">▶</span></a>`;
+  });
+  $("#list").innerHTML=h||'<p class="note">No hay clases con ese filtro.</p>';
+}
+renderList();
+
+/* resúmenes */
+$("#sums").innerHTML=RES.map((r,i)=>`<div class="sum${i===0?" open":""}"><div class="sum-h"><div class="d"><b>${r.dia}</b>${r.mes}</div><div><h4>${r.t}</h4><small>${r.sub} · ${r.ideas.length} ideas</small></div></div><div class="sum-b">
+ ${r.ideas.map((x,j)=>`<div class="idea"><div class="n">${j+1}</div><div><b>${x[0]}</b><p>${x[1]}</p></div></div>`).join("")}
+ <div class="flow">${r.flow.map(f=>`<span>${f}</span>`).join("")}</div>
+ <div class="quote">“${r.q}”</div>
+ ${r.tarea?`<p class="note"><b>Para trabajar:</b> ${r.tarea}</p>`:""}
+</div></div>`).join("")+`<p class="note">El profe va sumando un resumen por clase en el doc compartido.</p>`;
+document.querySelectorAll(".sum-h").forEach(h=>h.onclick=()=>h.parentElement.classList.toggle("open"));
+
+/* material y links */
+$("#mat").innerHTML=MAT.map(m=>`<div class="item"><div class="badge" style="background:#e8b04a22">${m[3]}</div><div class="t"><b>${m[0]}</b><small>${m[1]} · ${m[2]}</small></div></div>`).join("");
+$("#links").innerHTML=LINKS.map(l=>`<a class="item" href="${l[3]}" target="_blank" rel="noopener"><div class="badge" style="background:#e8b04a22">${l[0]}</div><div class="t"><b>${l[1]}</b><small>${l[2]}</small></div><span class="go">↗</span></a>`).join("");
+
+/* ===== cuenta única ===== */
+const store={get(k){try{return localStorage.getItem(k)||""}catch(e){return ""}},set(k,v){try{localStorage.setItem(k,v)}catch(e){}}};
+let MAIL=store.get("aem_mail"), LC=store.get("aem_lichess");
+function G(u){if(!MAIL)return u;const x=new URL(u);x.searchParams.set("authuser",MAIL);return x.toString()}
+function applyAccount(){
+  document.querySelectorAll("a[href]").forEach(a=>{
+    if(/(drive|docs|meet)\.google\.com/.test(a.href)){a.dataset.base=a.dataset.base||a.href;a.href=G(a.dataset.base)}
+  });
+  $("#acct-mail").textContent=MAIL||"elegir cuenta";
+}
+function openSetup(){$("#f-mail").value=MAIL;$("#f-lc").value=LC;$("#setup").classList.add("on");setTimeout(()=>$("#f-mail").focus(),100)}
+$("#acct").onclick=openSetup;$("#lc-edit").onclick=openSetup;
+$("#f-ok").onclick=()=>{
+  const m=$("#f-mail").value.trim().toLowerCase(), l=$("#f-lc").value.trim().replace(/^@/,"");
+  if(m&&!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(m)){toast("Revisá el correo");return}
+  MAIL=m;LC=l;store.set("aem_mail",m);store.set("aem_lichess",l);
+  $("#setup").classList.remove("on");applyAccount();loadLichess();toast("Listo, quedó guardado");
+};
+
+/* ===== estudios de Lichess ===== */
+const STUDIES=[
+ ["cOo8YfpH","Academia Jueves","De la clase","♞"],
+ ["0ZR2eihr","Finales básicos","Tarea de finales","♚"],
+ ["mpHAe64U","Yusupov · Fundamentos I","Con el PDF","📘"],
+ ["CeR8kSoe","Yusupov · Fundamentos II","Con el PDF","📗"],
+ ["U8QTrD3n","Patrones del peón torre","Clase 23/4","♟"],
+ ["jfboGJUj","Curso de Estrategia","Biblioteca","♜"],
+ ["5W5giSdk","Los cambios de piezas","Biblioteca","⇄"],
+ ["fvkW6M5N","Juego de peones","Biblioteca","♙"],
+ ["UtLEkikw","Principio de las 2 debilidades","Biblioteca","◎"],
+ ["4Cq4TGDs","Mayoría de peones flanco rey","Biblioteca","♔"],
+ ["vtsrghoh","Ataque de las minorías","Biblioteca","⚔"],
+ ["6iNN3oyP","El bloqueo","Biblioteca","⛔"],
+ ["MrDnwAly","Alekhine","Partidas","♛"],
+ ["m86m5QuZ","Aperturas con Rafa","Aperturas","♗"]
+];
+const FIRST={cOo8YfpH:"XUcVedjH","0ZR2eihr":"F6S7RWZy",mpHAe64U:"QNK6d3A2",CeR8kSoe:"zXDKsHMN",U8QTrD3n:"vI5gqJKD",jfboGJUj:"LqxfKLzT","5W5giSdk":"fC4lELSb",fvkW6M5N:"gARbQq5l",UtLEkikw:"xMEWjBev","4Cq4TGDs":"SOaQ97Vw",vtsrghoh:"U5b9b61o","6iNN3oyP":"1jC80QU2",MrDnwAly:"Ooip1W7v",m86m5QuZ:"EqTk21Cb"};
+let curStudy=null, chapters=[], ci=0;
+$("#studies").innerHTML=STUDIES.map(s=>`<div class="st" data-id="${s[0]}"><span class="ic">${s[3]}</span><b>${s[1]}</b><small>${s[2]}</small></div>`).join("");
+$("#studies").onclick=e=>{const c=e.target.closest(".st");if(c)openStudy(c.dataset.id)};
+function showChapter(i){
+  ci=Math.max(0,Math.min(chapters.length-1,i));
+  const ch=chapters[ci];
+  $("#board").src=`https://lichess.org/study/embed/${curStudy}/${ch.id}?theme=brown&bg=dark`;
+  $("#chsel").value=ci;
+  $("#solve").href=`https://lichess.org/study/${curStudy}/${ch.id}`;
+  $("#analyze").href=`https://lichess.org/study/${curStudy}/${ch.id}#analysis`;
+}
+async function openStudy(id){
+  curStudy=id;
+  document.querySelectorAll(".st").forEach(s=>s.classList.toggle("on",s.dataset.id===id));
+  chapters=[{id:FIRST[id],name:"Capítulo 1"}];
+  $("#chsel").innerHTML=`<option value="0">Capítulo 1</option>`;showChapter(0);
+  try{
+    const t=await (await fetch(`https://lichess.org/api/study/${id}.pgn?comments=false&variations=false&clocks=false`)).text();
+    const list=[...t.matchAll(/\[ChapterName "([^"]*)"\][\s\S]*?\[ChapterURL "([^"]*)"\]/g)].map(m=>({name:m[1],id:m[2].split("/").pop()}));
+    if(list.length&&curStudy===id){chapters=list;
+      $("#chsel").innerHTML=list.map((c,i)=>`<option value="${i}">${i+1}. ${c.name.replace(/</g,"&lt;")}</option>`).join("");
+      showChapter(0);}
+  }catch(e){}
+}
+$("#chsel").onchange=e=>showChapter(+e.target.value);
+$("#prev").onclick=()=>showChapter(ci-1);
+$("#next").onclick=()=>showChapter(ci+1);
+
+/* ===== YouTube: último video del canal ===== */
+let ytLoaded=false;
+function loadYT(){if(ytLoaded)return;ytLoaded=true;$("#yt").src="https://www.youtube.com/embed/videoseries?list=UUgI-dfAv5plhZQaNhfr4UcQ&rel=0"}
+
+/* ===== progreso en Lichess ===== */
+async function loadLichess(){
+  const box=$("#lc");
+  if(!LC){box.innerHTML=`<p style="color:var(--mut);font-size:14px">Cargá tu usuario de Lichess para ver tus ratings y cómo evolucionaron desde que arrancó el curso.</p><button class="btn primary" style="margin-top:12px" onclick="openSetup()">Agregar mi usuario</button>`;$("#t-prog").textContent="Tu perfil de Lichess";return}
+  box.innerHTML="Cargando…";
+  try{
+    const u=await (await fetch("https://lichess.org/api/user/"+encodeURIComponent(LC))).json();
+    const h=await (await fetch("https://lichess.org/api/user/"+encodeURIComponent(LC)+"/rating-history")).json();
+    const since=Date.UTC(2026,1,1);
+    const pick=["rapid","blitz","classical","puzzle"].filter(k=>u.perfs&&u.perfs[k]&&u.perfs[k].games!==0);
+    const delta=name=>{const s=h.find(x=>x.name.toLowerCase()===name);if(!s||!s.points.length)return null;
+      const pts=s.points.map(p=>({t:Date.UTC(p[0],p[1],p[2]),r:p[3]}));const before=pts.filter(p=>p.t<=since).pop()||pts.find(p=>p.t>since);
+      return before?{d:pts[pts.length-1].r-before.r,pts:pts.filter(p=>p.t>=since)}:null};
+    const cards=pick.slice(0,4).map(k=>{const p=u.perfs[k],d=delta(k==="puzzle"?"puzzles":k);
+      const lbl={rapid:"Rápidas",blitz:"Blitz",classical:"Clásicas",puzzle:"Puzzles"}[k];
+      const dd=d?`<em class="${d.d>=0?"up":"dn"}">${d.d>=0?"▲":"▼"} ${Math.abs(d.d)} desde feb</em>`:"";
+      return `<div><small>${lbl}</small><b>${p.rating}</b> ${dd}<small>${p.games||0} partidas</small></div>`}).join("");
+    const main=delta(pick.includes("rapid")?"rapid":pick[0]==="puzzle"?"puzzles":pick[0]);
+    let spark="";
+    if(main&&main.pts.length>1){const rs=main.pts.map(p=>p.r),mn=Math.min(...rs),mx=Math.max(...rs),W=300,H=70;
+      const path=main.pts.map((p,i)=>`${(i/(main.pts.length-1)*W).toFixed(1)},${(H-6-(p.r-mn)/((mx-mn)||1)*(H-12)).toFixed(1)}`).join(" ");
+      spark=`<svg class="spark" viewBox="0 0 ${W} ${H}" preserveAspectRatio="none"><polyline points="${path}" fill="none" stroke="#e8b04a" stroke-width="2.5" stroke-linejoin="round"/></svg><small style="color:var(--mut);font-size:12px">Evolución desde febrero 2026 (${pick.includes("rapid")?"rápidas":pick[0]})</small>`}
+    box.innerHTML=`<div class="prof"><div class="av">♞</div><div style="flex:1"><b>${u.username}</b><br><small style="color:var(--mut)">${(u.count&&u.count.all)||0} partidas en total</small></div><a class="btn" style="width:auto;padding:10px 12px" href="https://lichess.org/@/${u.username}" target="_blank" rel="noopener">Perfil ↗</a></div><div class="rt">${cards}</div>${spark}
+    <div class="row"><a class="btn" href="https://lichess.org/insights/${u.username}" target="_blank" rel="noopener">📊 Insights</a><a class="btn" href="https://lichess.org/training/dashboard/30" target="_blank" rel="noopener">🧩 Mis puzzles</a></div>`;
+    const r=u.perfs&&(u.perfs.rapid||u.perfs.blitz);$("#t-prog").textContent=r?u.username+" · "+r.rating:u.username;
+  }catch(e){box.innerHTML=`<p style="color:var(--mut)">No pude leer el usuario “${LC}”. Revisá que esté bien escrito.</p><a class="btn" style="margin-top:10px" href="https://lichess.org/@/${encodeURIComponent(LC)}" target="_blank" rel="noopener">Abrir mi perfil en Lichess ↗</a>`}
+}
+
+/* ===== tienda ===== */
+const SHOP=[
+ ["Mega Pack Minutero","Todos los cursos","mega-pack-minutero-todos-mis-cursos"],
+ ["El Método Minutero","De principiante a avanzado","de-principiante-a-avanzado-2"],
+ ["Dominá el medio juego","Pack 4 en 1","pack-full-4-en-1-pack-de-estrategia-mejora-tu-calculo"],
+ ["Convertí pequeñas ventajas","Técnica y finales","mejoratutecnica"],
+ ["Ajedrez Intermedio","Dejar de regalar partidas","ajedrez-intermedio-pensar-mejor-y-dejar-de-regalar-partidas"],
+ ["El pensamiento preventivo","Curso","el-pensamiento-preventivo"]
+];
+$("#shop").innerHTML=SHOP.map(s=>`<a href="https://ajedrezenminutos.com/courses/${s[2]}/" target="_blank" rel="noopener"><b>${s[0]}</b>${s[1]}</a>`).join("");
+
+/* navegación con carga diferida */
+const _go=go;go=function(v){_go(v);if(v==="videos")loadYT();if(v==="estudios"&&!curStudy)openStudy(STUDIES[0][0]);};
+applyAccount();loadLichess();
+if(!MAIL)openSetup();
+try{if("serviceWorker" in navigator&&location.protocol==="https:"&&!/claude/.test(location.host))navigator.serviceWorker.register("sw.js").catch(()=>{})}catch(e){}
+go(location.hash.slice(1)||"inicio");
+</script>
+</body>
+</html>
