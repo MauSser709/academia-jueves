@@ -114,7 +114,7 @@ input.search{width:100%;padding:12px 14px;border-radius:14px;border:1px solid va
 /* nav */
 nav{position:fixed;left:0;right:0;bottom:0;background:rgba(20,17,15,.92);backdrop-filter:blur(10px);border-top:1px solid var(--line);display:flex;justify-content:center;z-index:5}
 nav .in{display:flex;max-width:720px;width:100%}
-nav button{flex:1;min-width:0;background:none;border:0;color:var(--mut);padding:10px 0 12px;display:flex;flex-direction:column;align-items:center;gap:2px;font-size:10.5px;font-family:inherit;cursor:pointer}
+nav button{flex:1;min-width:0;background:none;border:0;color:var(--mut);padding:10px 0 12px;display:flex;flex-direction:column;align-items:center;gap:2px;font-size:10px;font-family:inherit;cursor:pointer}
 nav button i{font-style:normal;font-size:21px;transition:transform .2s}
 nav button.on{color:var(--gold2)}
 nav button.on i{transform:translateY(-2px) scale(1.12)}
@@ -287,6 +287,30 @@ nav button.on i{transform:translateY(-2px) scale(1.12)}
     </div>
   </section>
 
+  <!-- CONTACTO -->
+  <section class="view" id="v-contacto">
+    <div class="sec" style="margin-top:0">
+      <h3>Contacto <small>MF Rafael Miranda</small></h3>
+      <div class="card" style="text-align:center">
+        <div style="font-size:40px">♞</div>
+        <p style="color:var(--mut);font-size:14px;margin:4px 0 14px">¿Dudas con una clase, el campus o los pagos? Escribile directo al profe.</p>
+        <a class="btn primary" href="https://wa.me/5492216780467?text=Hola%20Rafa%2C%20soy%20alumno%20de%20la%20Academia%20de%20los%20Jueves." target="_blank" rel="noopener">💬 Escribir por WhatsApp</a>
+        <a class="btn" style="margin-top:10px" href="mailto:info@ajedrezenminutos.com?subject=Academia%20de%20los%20Jueves">✉ Mandar un mail</a>
+        <p class="note">info@ajedrezenminutos.com · +54 9 221 678-0467</p>
+        <div class="row" style="grid-template-columns:repeat(4,1fr)">
+          <a class="btn" href="https://www.instagram.com/ajedrezenmins/" target="_blank" rel="noopener" title="Instagram">📷</a>
+          <a class="btn" href="https://www.youtube.com/channel/UCgI-dfAv5plhZQaNhfr4UcQ" target="_blank" rel="noopener" title="YouTube">▶</a>
+          <a class="btn" href="https://www.facebook.com/ajedrezenminutos/" target="_blank" rel="noopener" title="Facebook">f</a>
+          <a class="btn" href="https://ajedrezenminutos.com/" target="_blank" rel="noopener" title="Web">🌐</a>
+        </div>
+      </div>
+    </div>
+    <div class="sec" id="don-sec" style="display:none">
+      <h3>Apoyá al profe <small>donaciones</small></h3>
+      <div class="row" id="don"></div>
+    </div>
+  </section>
+
   <!-- PRIMER INGRESO -->
   <div class="modal" id="setup"><div class="box">
     <h3>♞ Bienvenido</h3>
@@ -306,6 +330,7 @@ nav button.on i{transform:translateY(-2px) scale(1.12)}
   <button data-go="estudios"><i>♟</i>Estudios</button>
   <button data-go="videos"><i>▶</i>Videos</button>
   <button data-go="mas"><i>☰</i>Más</button>
+  <button data-go="contacto"><i>✉</i>Contacto</button>
 </div></nav>
 <div class="toast" id="toast"></div>
 
@@ -661,6 +686,10 @@ async function loadLichess(){
     const r=u.perfs&&(u.perfs.rapid||u.perfs.blitz);$("#t-prog").textContent=r?u.username+" · "+r.rating:u.username;
   }catch(e){box.innerHTML=`<p style="color:var(--mut)">No pude leer el usuario “${LC}”. Revisá que esté bien escrito.</p><a class="btn" style="margin-top:10px" href="https://lichess.org/@/${encodeURIComponent(LC)}" target="_blank" rel="noopener">Abrir mi perfil en Lichess ↗</a>`}
 }
+
+/* ===== donaciones: completar con los links del profe ===== */
+const DON=[ /* ["☕ Invitar un cafecito","https://..."], ["💙 Donar con Mercado Pago","https://..."] */ ];
+if(DON.length){$("#don-sec").style.display="block";$("#don").innerHTML=DON.map((d,i)=>`<a class="btn${i===0?" primary":""}" href="${d[1]}" target="_blank" rel="noopener">${d[0]}</a>`).join("")}
 
 /* ===== tienda ===== */
 const SHOP=[
